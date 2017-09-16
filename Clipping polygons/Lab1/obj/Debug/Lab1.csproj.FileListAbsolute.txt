@@ -1,0 +1,27 @@
+C:\Users\Admin\Downloads\АКГ ПОВС\АКГ\Задания\Лабораторная работа №1\labexample_SDL_C#\Lab_example_C#\Lab1\bin\Debug\Lab1.exe.config
+C:\Users\Admin\Downloads\АКГ ПОВС\АКГ\Задания\Лабораторная работа №1\labexample_SDL_C#\Lab_example_C#\Lab1\bin\Debug\Lab1.exe
+C:\Users\Admin\Downloads\АКГ ПОВС\АКГ\Задания\Лабораторная работа №1\labexample_SDL_C#\Lab_example_C#\Lab1\bin\Debug\Lab1.pdb
+C:\Users\Admin\Downloads\АКГ ПОВС\АКГ\Задания\Лабораторная работа №1\labexample_SDL_C#\Lab_example_C#\Lab1\obj\Debug\Lab1.csprojResolveAssemblyReference.cache
+C:\Users\Admin\Downloads\АКГ ПОВС\АКГ\Задания\Лабораторная работа №1\labexample_SDL_C#\Lab_example_C#\Lab1\obj\Debug\Lab1.MainForm.resources
+C:\Users\Admin\Downloads\АКГ ПОВС\АКГ\Задания\Лабораторная работа №1\labexample_SDL_C#\Lab_example_C#\Lab1\obj\Debug\Lab1.Properties.Resources.resources
+C:\Users\Admin\Downloads\АКГ ПОВС\АКГ\Задания\Лабораторная работа №1\labexample_SDL_C#\Lab_example_C#\Lab1\obj\Debug\Lab1.csproj.GenerateResource.Cache
+C:\Users\Admin\Downloads\АКГ ПОВС\АКГ\Задания\Лабораторная работа №1\labexample_SDL_C#\Lab_example_C#\Lab1\obj\Debug\Lab1.exe
+C:\Users\Admin\Downloads\АКГ ПОВС\АКГ\Задания\Лабораторная работа №1\labexample_SDL_C#\Lab_example_C#\Lab1\obj\Debug\Lab1.pdb
+E:\bsuir\АКГ\Lab 1\Lab_example_C#\Lab1\bin\Debug\Lab1.exe.config
+E:\bsuir\АКГ\Lab 1\Lab_example_C#\Lab1\bin\Debug\Lab1.exe
+E:\bsuir\АКГ\Lab 1\Lab_example_C#\Lab1\bin\Debug\Lab1.pdb
+E:\bsuir\АКГ\Lab 1\Lab_example_C#\Lab1\obj\Debug\Lab1.csprojResolveAssemblyReference.cache
+E:\bsuir\АКГ\Lab 1\Lab_example_C#\Lab1\obj\Debug\Lab1.MainForm.resources
+E:\bsuir\АКГ\Lab 1\Lab_example_C#\Lab1\obj\Debug\Lab1.Properties.Resources.resources
+E:\bsuir\АКГ\Lab 1\Lab_example_C#\Lab1\obj\Debug\Lab1.csproj.GenerateResource.Cache
+E:\bsuir\АКГ\Lab 1\Lab_example_C#\Lab1\obj\Debug\Lab1.exe
+E:\bsuir\АКГ\Lab 1\Lab_example_C#\Lab1\obj\Debug\Lab1.pdb
+C:\Users\Анастасия Жих\Desktop\Lab_example_C#\Lab1\bin\Debug\Lab1.exe.config
+C:\Users\Анастасия Жих\Desktop\Lab_example_C#\Lab1\bin\Debug\Lab1.exe
+C:\Users\Анастасия Жих\Desktop\Lab_example_C#\Lab1\bin\Debug\Lab1.pdb
+C:\Users\Анастасия Жих\Desktop\Lab_example_C#\Lab1\obj\Debug\Lab1.csprojResolveAssemblyReference.cache
+C:\Users\Анастасия Жих\Desktop\Lab_example_C#\Lab1\obj\Debug\Lab1.MainForm.resources
+C:\Users\Анастасия Жих\Desktop\Lab_example_C#\Lab1\obj\Debug\Lab1.Properties.Resources.resources
+C:\Users\Анастасия Жих\Desktop\Lab_example_C#\Lab1\obj\Debug\Lab1.csproj.GenerateResource.Cache
+C:\Users\Анастасия Жих\Desktop\Lab_example_C#\Lab1\obj\Debug\Lab1.exe
+C:\Users\Анастасия Жих\Desktop\Lab_example_C#\Lab1\obj\Debug\Lab1.pdb
