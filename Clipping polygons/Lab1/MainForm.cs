@@ -14,6 +14,8 @@ namespace Lab1
         private IntPtr window;
         private IntPtr renderer;
 
+        private RightPolygonData cicle;
+        private RectangleData rectangle;
 
         public MainForm()
         {
@@ -37,11 +39,10 @@ namespace Lab1
 
         private void SdlWorker()
         {
-            SDL.SDL_Init(SDL.SDL_INIT_EVERYTHING);
+            OnInit();
 
-            // init window and renderer
-            window = SDL.SDL_CreateWindow("Lab 1", 100, 100, 100 + SCREEN_WIDTH, 100 + SCREEN_HEIGHT, SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
-            renderer = SDL.SDL_CreateRenderer(window, -1, SDL.SDL_RendererFlags.SDL_RENDERER_ACCELERATED);
+            cicle = new RightPolygonData(100, 200, 200, 100, 0.4);
+            rectangle = new RectangleData(500,100,100,50);
 
             // some flags
             bool quit = false;
@@ -96,19 +97,40 @@ namespace Lab1
 
                 if (draw)
                 {
-                    DrawShape();
-
+                    OnRender();
                     Thread.Sleep(10); // somehow calibrate render loop
                 }
             }
 
+            OnCleanup();
+        }
+
+        void OnCleanup()
+        {
             // clean up
             SDL.SDL_DestroyRenderer(renderer);
             SDL.SDL_DestroyWindow(window);
             SDL.SDL_Quit();
         }
 
-        private void DrawShape()
+        bool OnInit()
+        {
+            SDL.SDL_Init(SDL.SDL_INIT_EVERYTHING);
+
+            // init window and renderer
+            window = SDL.SDL_CreateWindow("Lab 3", 100, 100, 100 + SCREEN_WIDTH, 100 + SCREEN_HEIGHT, SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
+            renderer = SDL.SDL_CreateRenderer(window, -1, SDL.SDL_RendererFlags.SDL_RENDERER_ACCELERATED);
+
+            return true;
+        }
+
+
+        //void OnLoop()
+        //{
+
+        //}
+
+        private void OnRender()
         {
             SDL.SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);           // set window background color
             SDL.SDL_RenderClear(renderer);
@@ -119,15 +141,19 @@ namespace Lab1
             var points = new SDL.SDL_Point[n];
 
             SDL.SDL_GetWindowSize(window, out width, out height);
-            int x0 = 100, y0 = 200;
-            int r = 100;
-            double phi = 0.4;
 
             double widthScale = (double)width / SCREEN_WIDTH;
             double heightScale = (double)height / SCREEN_HEIGHT;
-            
 
-            Draw_RightPolygon(x0, y0, r, n, phi, heightScale);
+            if (cicle.N > 2)
+            {
+                BuildPolygon.Build_RightPolygon(cicle, heightScale);
+                Draw_Polygon(cicle.Points, cicle.N);
+
+                BuildPolygon.Build_Rectangle(rectangle, widthScale, heightScale);
+                Draw_Polygon(rectangle.Points, 4);
+                
+            }
             SDL.SDL_RenderPresent(renderer);
         }
 
@@ -139,23 +165,6 @@ namespace Lab1
                   points[i].x, points[i].y);
             SDL.SDL_RenderDrawLine(renderer, points[n - 1].x, points[n - 1].y,
               points[0].x, points[0].y);
-
-        }
-
-        void Draw_RightPolygon(int x0, int y0, int r, int n, double phi, double heightScale)
-        {
-            var points = new SDL.SDL_Point[n];
-            if (n > 2)
-            {
-                double omega = Math.PI * 2 / n;
-                int i;
-                for (i = 0; i < n; i++)
-                {
-                    points[i].x = (int)Math.Floor((x0 + r * Math.Cos(omega * i + phi)) * heightScale);
-                    points[i].y = (int)Math.Floor((y0 - r * Math.Sin(omega * i + phi)) * heightScale);
-                }
-                Draw_Polygon(points, n);
-            }
         }
     }
 }

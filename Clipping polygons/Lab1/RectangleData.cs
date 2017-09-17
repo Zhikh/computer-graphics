@@ -2,36 +2,20 @@
 
 namespace Lab1
 {
-    class RightPolygonData
+    class RectangleData
     {
-        private int n;          //number of coners
         private int x0;         //P(x0, y0)
         private int y0;
-        private int r;          //radius
-        private double phi;     //angle of inclination in radians (360/(2*n))*0,0174533
+        private int width;
+        private int height;
         private SDL.SDL_Point[] points;
 
-        public RightPolygonData(int n, int x0, int y0, int r, double phi)
+        public RectangleData(int x0, int y0, int width, int height)
         {
-            N = n;
             X0 = x0;
             Y0 = y0;
-            R = r;
-            Phi = phi;
-
-        }
-
-        public int N
-        {
-            get
-            {
-                return n;
-            }
-
-            set
-            {
-                n = value;
-            }
+            Width = width;
+            Height = height;
         }
 
         public int X0
@@ -60,29 +44,29 @@ namespace Lab1
             }
         }
 
-        public int R
+        public int Width
         {
             get
             {
-                return r;
+                return width;
             }
 
             set
             {
-                r = value;
+                width = value;
             }
         }
 
-        public double Phi
+        public int Height
         {
             get
             {
-                return phi;
+                return height;
             }
 
             set
             {
-                phi = value;
+                height = value;
             }
         }
 
@@ -95,11 +79,8 @@ namespace Lab1
 
             set
             {
-                if (N > 2)
-                {
-                    points = new SDL.SDL_Point[N];
-                    points = value;
-                }
+                points = new SDL.SDL_Point[4];
+                points = value;
             }
         }
     }

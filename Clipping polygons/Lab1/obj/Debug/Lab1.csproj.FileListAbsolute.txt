@@ -25,3 +25,12 @@ C:\Users\Анастасия Жих\Desktop\Lab_example_C#\Lab1\obj\Debug\Lab1.Pr
 C:\Users\Анастасия Жих\Desktop\Lab_example_C#\Lab1\obj\Debug\Lab1.csproj.GenerateResource.Cache
 C:\Users\Анастасия Жих\Desktop\Lab_example_C#\Lab1\obj\Debug\Lab1.exe
 C:\Users\Анастасия Жих\Desktop\Lab_example_C#\Lab1\obj\Debug\Lab1.pdb
+C:\Users\Анастасия Жих\Documents\computer_graphics\Clipping polygons\Lab1\bin\Debug\Lab1.exe.config
+C:\Users\Анастасия Жих\Documents\computer_graphics\Clipping polygons\Lab1\obj\Debug\Lab1.exe
+C:\Users\Анастасия Жих\Documents\computer_graphics\Clipping polygons\Lab1\obj\Debug\Lab1.pdb
+C:\Users\Анастасия Жих\Documents\computer_graphics\Clipping polygons\Lab1\bin\Debug\Lab1.exe
+C:\Users\Анастасия Жих\Documents\computer_graphics\Clipping polygons\Lab1\bin\Debug\Lab1.pdb
+C:\Users\Анастасия Жих\Documents\computer_graphics\Clipping polygons\Lab1\obj\Debug\Lab1.csprojResolveAssemblyReference.cache
+C:\Users\Анастасия Жих\Documents\computer_graphics\Clipping polygons\Lab1\obj\Debug\Lab1.MainForm.resources
+C:\Users\Анастасия Жих\Documents\computer_graphics\Clipping polygons\Lab1\obj\Debug\Lab1.Properties.Resources.resources
+C:\Users\Анастасия Жих\Documents\computer_graphics\Clipping polygons\Lab1\obj\Debug\Lab1.csproj.GenerateResource.Cache
