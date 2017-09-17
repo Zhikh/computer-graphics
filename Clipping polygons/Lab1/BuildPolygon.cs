@@ -29,10 +29,16 @@ namespace Lab1
             points[1].y = points[0].y;
 
             points[2].x = points[1].x;
-            points[2].y = points[1].y - rectangle.Height;
+            points[2].y = Math.Abs(points[1].y - rectangle.Height);
 
-            points[3].x = points[2].x - rectangle.Width;
+            points[3].x =Math.Abs(points[2].x - rectangle.Width);
             points[3].y = points[2].y;
+
+            for (int i = 0; i < 4; i++)
+            {
+                points[i].x = (int)Math.Floor(points[i].x * widthScale);
+                points[i].y = (int)Math.Floor(points[i].y * heightScale);
+            }
 
             rectangle.Points = points;
         }
