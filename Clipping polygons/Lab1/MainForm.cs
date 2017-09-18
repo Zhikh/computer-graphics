@@ -212,11 +212,11 @@ namespace Lab1
             {
                 for (int j = 0; j < 4; j++)
                 {
-                    if (pointSercher.IsPointExist(clippingWindow.Points[i, 0], clippingWindow.Points[i, 1], rectangle.Points[j, 0], rectangle.Points[j, 1]))
+                    if (pointSercher.IsSegmentsIntersect(clippingWindow.Points[i, 0], clippingWindow.Points[i, 1], rectangle.Points[j, 0], rectangle.Points[j, 1]))
                     {
                         length++;
                         Array.Resize(ref points, length);
-                        points[k] = pointSercher.p;
+                        points[k] = pointSercher.crossingPoint;
                         k++;
                     }
                 }
