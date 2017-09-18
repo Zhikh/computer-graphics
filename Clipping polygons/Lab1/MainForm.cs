@@ -26,8 +26,7 @@ namespace Lab1
 
             sdlWorkerThread.Start();
         }
-
-
+        
         private void MainForm_Shown(object sender, EventArgs e)
         {
             // close the window in main thread
@@ -35,101 +34,19 @@ namespace Lab1
             Hide();
             Close();
         }
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool AllocConsole();
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool FreeConsole();
-
+        
         private void SdlWorker()
         {
             OnInit();
+
             int clippingWindowWidth = SCREEN_WIDTH - 100;
             int clippingWindowHeight = SCREEN_HEIGHT - 25;
+
             clippingWindow = new RectangleData(50, 50, clippingWindowWidth, clippingWindowHeight);
             cicle = new RightPolygonData(clippingWindow.X0 + 100, clippingWindow.Y0 + 100, 100, 100, 0.4);
             rectangle = new RectangleData(clippingWindow.X0 + 400, clippingWindow.Y0 + 100, 200, 100);
 
-            // some flags
-            bool quit = false;
-            bool draw = true;
-
-            while (!quit)
-            {
-                SDL.SDL_Event sdlEvent;
-                SDL.SDL_PollEvent(out sdlEvent);
-
-                switch (sdlEvent.type)
-                {
-                    case SDL.SDL_EventType.SDL_QUIT:
-                        {
-                            quit = true;
-                        }
-                        break;
-                    case SDL.SDL_EventType.SDL_KEYDOWN:
-                        {
-                            var key = sdlEvent.key;
-                            string test = SDL.SDL_GetScancodeName(SDL.SDL_GetScancodeFromKey(key.keysym.sym));
-                            switch (key.keysym.sym)
-                            {
-                                case SDL.SDL_Keycode.SDLK_DOWN:
-                                    {
-                                        if (AllocConsole())
-                                        {
-                                            int newWidth;
-                                            Console.WriteLine("Введите ширину окна: ");
-                                            while(!Int32.TryParse(Console.ReadLine(), out newWidth))
-                                            {
-                                                Console.WriteLine("Введите ширину окна: ");
-                                            }
-                                            clippingWindow.Width = newWidth;
-                                            
-                                            int newHeight;
-                                            Console.WriteLine("Введите ширину окна: ");
-                                            while (!Int32.TryParse(Console.ReadLine(), out newHeight))
-                                            {
-                                                Console.WriteLine("Введите высоту окна: ");
-                                            }
-                                            clippingWindow.Height = newHeight;
-                                            FreeConsole();
-                                        }
-
-                                        //IntPtr console = SDL.SDL_CreateWindow("test for input", 100, 100, 100, 100, SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
-                                    }
-                                    break;
-                                case SDL.SDL_Keycode.SDLK_UP:
-                                    {
-                                        // do smth
-                                    }
-                                    break;
-                            }
-                        }
-                        break;
-                    case SDL.SDL_EventType.SDL_MOUSEBUTTONDOWN:
-                        {
-                            // start or stop rendering on left mouse button click
-                            if (sdlEvent.button.button == SDL.SDL_BUTTON_LEFT)
-                            {
-                                draw = !draw;   // toggle value
-                            }
-                            else
-                            if (sdlEvent.button.button == SDL.SDL_BUTTON_RIGHT)
-                            {
-                                // do smth
-                            }
-                        }
-                        break;
-                }
-
-                if (draw)
-                {
-                    OnRender();
-                    Thread.Sleep(10); // somehow calibrate render loop
-                }
-            }
+            OnLoop();
 
             OnCleanup();
         }
@@ -153,23 +70,96 @@ namespace Lab1
             return true;
         }
 
-        
-
-        static public SDL.SDL_Point Intersection(SDL.SDL_Point A, SDL.SDL_Point B, SDL.SDL_Point C, SDL.SDL_Point D)
+        private void OnLoop()
         {
-            SDL.SDL_Point point;
-            double xo = A.x, yo = A.y;
-            double p = B.x - A.x, q = B.y - A.y;
+            // some flags
+            bool quit = false;
 
-            double x1 = C.x, y1 = C.y;
-            double p1 = D.x - C.x, q1 = D.y - C.y;
+            while (!quit)
+            {
+                SDL.SDL_Event sdlEvent;
+                SDL.SDL_PollEvent(out sdlEvent);
 
-            point.x = (int)Math.Floor((xo * q * p1 - x1 * q1 * p - yo * p * p1 + y1 * p * p1) /
-                (q * p1 - q1 * p));
-            point.y = (int)Math.Floor((yo * p * q1 - y1 * p1 * q - xo * q * q1 + x1 * q * q1) /
-                (p * q1 - p1 * q));
+                quit = OnEvent(sdlEvent);
+            }
+        }
 
-            return point;
+        private bool OnEvent(SDL.SDL_Event sdlEvent)
+        {
+            bool draw = true;
+
+            switch (sdlEvent.type)
+            {
+                case SDL.SDL_EventType.SDL_QUIT:
+                {
+                    return true;
+                }
+                case SDL.SDL_EventType.SDL_KEYDOWN:
+                {
+                    var key = sdlEvent.key;
+                    string test = SDL.SDL_GetScancodeName(SDL.SDL_GetScancodeFromKey(key.keysym.sym));
+                    switch (key.keysym.sym)
+                    {
+                        case SDL.SDL_Keycode.SDLK_DOWN:
+                        {
+                            ShowConsole();
+                        }
+                        break;
+                    }
+                }
+                break;
+                case SDL.SDL_EventType.SDL_MOUSEBUTTONDOWN:
+                {
+                    // start or stop rendering on left mouse button click
+                    if (sdlEvent.button.button == SDL.SDL_BUTTON_LEFT)
+                    {
+                        draw = !draw;   // toggle value
+                    }
+                    else
+                    if (sdlEvent.button.button == SDL.SDL_BUTTON_RIGHT)
+                    {
+                        // do smth
+                    }
+                }
+                break;
+            }
+
+            if (draw)
+            {
+                OnRender();
+                Thread.Sleep(10); // somehow calibrate render loop
+            }
+
+            return false;
+        }
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool AllocConsole();
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool FreeConsole();
+
+        private void ShowConsole()
+        {
+            if (AllocConsole())
+            {
+                int newWidth;
+                do
+                {
+                    Console.WriteLine("Введите ширину окна: ");
+                } while (!Int32.TryParse(Console.ReadLine(), out newWidth));
+                clippingWindow.Width = newWidth;
+
+                int newHeight;
+                do
+                {
+                    Console.WriteLine("Введите высоту окна: ");
+                } while (!Int32.TryParse(Console.ReadLine(), out newHeight));
+                clippingWindow.Height = newHeight;
+                FreeConsole();
+            }
         }
 
         private void OnRender()
@@ -196,16 +186,16 @@ namespace Lab1
                 SDL.SDL_Point point;
 
                 int i = 0;
-                while(i < 4)
+                while (i < 4)
                 {
                     int j = 0;
                     while (j < cicle.N)
                     {
-                        point = Intersection(clippingWindow.Points[i], clippingWindow.Points[i+1], cicle.Points[j], cicle.Points[j+1]);
+                        //point = Intersection(clippingWindow.Points[i], clippingWindow.Points[i + 1], cicle.Points[j], cicle.Points[j + 1]);
+                        j += 2;
                     }
                     i += 2;
                 }
-
 
                 Draw_Polygon(clippingWindow.Points, 4);
                 Draw_Polygon(cicle.Points, cicle.N);
