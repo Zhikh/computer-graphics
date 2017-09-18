@@ -21,7 +21,7 @@ namespace Lab1
 
         private bool mouseClicked;
         private int prevX, prevY;
-        
+        private int fi;
 
         public MainForm()
         {
@@ -48,6 +48,7 @@ namespace Lab1
             int clippingWindowHeight = SCREEN_HEIGHT - 25;
 
             mouseClicked = false;
+            fi = 0;
 
             clippingWindow = new RectangleData(50, 50, clippingWindowWidth, clippingWindowHeight);
             cicle = new RightPolygonData(100, clippingWindow.X0 + 100, clippingWindow.Y0 + 100, 50, 0.4);
@@ -155,19 +156,6 @@ namespace Lab1
                     break;
             }
 
-            if (animParams.TimerFake++ >= 5)
-            {
-                if (animParams.RectOffsetX > SCREEN_WIDTH - 100 || animParams.RectOffsetX < SCREEN_HEIGHT - 25)       //TODO: checked for motion
-                    animParams.RDelta *= -1;
-                if (animParams.CiclOffsetX > SCREEN_WIDTH - 100 || animParams.CiclOffsetX < SCREEN_HEIGHT - 25)
-                    animParams.CDelta *= -1;
-                animParams.RectOffsetX += animParams.RDelta;
-                animParams.CiclOffsetX += animParams.CDelta;
-                animParams.TimerFake = 0;
-                if (animParams.Fi++ > 360)
-                    animParams.Fi = 0;
-            }
-
             if (draw)
             {
                 OnRender();
@@ -223,14 +211,26 @@ namespace Lab1
 
             if (cicle.N > 2)
             {
-                BuildPolygon.Build_Rectangle(clippingWindow, widthScale, heightScale, 0, 0);
-                BuildPolygon.Build_RightPolygon(cicle, heightScale, animParams.CiclOffsetX, animParams.CiclOffSetY);
-                BuildPolygon.Build_Rectangle(rectangle, widthScale, heightScale, animParams.RectOffsetX, animParams.RectOffSetY);
+                if (animParams.TimerFake++ >= 5)
+                {
+                    if (animParams.RectOffsetX > SCREEN_WIDTH - 100 || animParams.RectOffsetX < SCREEN_HEIGHT - 25)       //TODO: checked for motion
+                        animParams.RDelta *= -1;
+                    if (animParams.CiclOffsetX > SCREEN_WIDTH - 100 || animParams.CiclOffsetX < SCREEN_HEIGHT - 25)
+                        animParams.CDelta *= -1;
+                    animParams.RectOffsetX += animParams.RDelta;
+                    animParams.CiclOffsetX += animParams.CDelta;
+                    animParams.TimerFake = 0;
+                    if (fi++ > 360)
+                        fi = 0;
+                }
+                animParams.Fi = fi * Math.PI / 180;
+                BuildPolygon.Build_Rectangle(clippingWindow, widthScale, heightScale);
+                BuildPolygon.Build_RightPolygon(cicle, heightScale, animParams);
+                BuildPolygon.Build_Rectangle(rectangle, widthScale, heightScale, animParams);
 
                 Draw_Polygon(clippingWindow.Points, 4);
                 SDL.SDL_Point[] testPointArray = FindIntersectionPoints();
                 Draw_Polygon(rectangle.Points, 4);
-                //SDL.SDL_RenderDrawPoints(renderer, cicle.Points, points.Length);
                 Draw_Polygon(cicle.Points, cicle.N);
             }
             SDL.SDL_RenderPresent(renderer);

@@ -10,7 +10,7 @@ namespace Lab1
         private int rDelta;
         private int cDelta;
         private int timerFake;
-        private int fi;
+        private double fi;
 
         public AnimationData()
         {
@@ -32,7 +32,7 @@ namespace Lab1
             affine_transformation[2, 2] = 1;
         }
 
-        public int Fi
+        public double Fi
         {
             get
             {
@@ -42,6 +42,7 @@ namespace Lab1
             set
             {
                 fi = value;
+                fi *= Math.PI / 180;
 
                 affine_transformation[0, 0] = Math.Cos(fi);
                 affine_transformation[0, 1] = Math.Sin(fi);
@@ -138,6 +139,19 @@ namespace Lab1
             set
             {
                 timerFake = value;
+            }
+        }
+
+        public double[,] Affine_transformation
+        {
+            get
+            {
+                return affine_transformation;
+            }
+
+            set
+            {
+                affine_transformation = value;
             }
         }
     }
