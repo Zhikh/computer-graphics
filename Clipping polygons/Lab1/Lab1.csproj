@@ -57,7 +57,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Animation.cs" />
+    <Compile Include="AnimationData.cs" />
     <Compile Include="BuildPolygon.cs" />
     <Compile Include="IntersectionPoints.cs" />
     <Compile Include="MainForm.cs">

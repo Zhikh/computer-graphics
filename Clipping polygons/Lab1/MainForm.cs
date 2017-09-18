@@ -17,11 +17,11 @@ namespace Lab1
         private RightPolygonData cicle;
         private RectangleData rectangle;
         private RectangleData clippingWindow;
+        private AnimationData animParams;
 
         private bool mouseClicked;
         private int prevX, prevY;
-        private int rectOffsetX, rectOffSetY,
-            ciclOffsetX, ciclOffSetY;
+        
 
         public MainForm()
         {
@@ -48,14 +48,11 @@ namespace Lab1
             int clippingWindowHeight = SCREEN_HEIGHT - 25;
 
             mouseClicked = false;
-            ciclOffsetX = 0;
-            ciclOffSetY = 0;
-            rectOffsetX = 0;
-            rectOffSetY = 0;
 
             clippingWindow = new RectangleData(50, 50, clippingWindowWidth, clippingWindowHeight);
             cicle = new RightPolygonData(100, clippingWindow.X0 + 100, clippingWindow.Y0 + 100, 50, 0.4);
             rectangle = new RectangleData(clippingWindow.X0 + 400, clippingWindow.Y0 + 100, 300, 50);
+            animParams = new AnimationData();
 
             OnLoop();
 
@@ -140,13 +137,13 @@ namespace Lab1
 
                         if (BuildPolygon.isPointInsidePolygon(rectangle.Points, rectangle.Points.Length, x, y))
                         {
-                            rectOffsetX += (x - prevX);
-                            rectOffSetY += (y - prevY);
+                            animParams.RectOffsetX += (x - prevX);
+                            animParams.RectOffSetY += (y - prevY);
                         }
                         if (BuildPolygon.isPointInsidePolygon(cicle.Points, cicle.Points.Length, x, y))
                         {
-                            ciclOffsetX += (x - prevX);
-                            ciclOffSetY += (y - prevY);
+                            animParams.CiclOffsetX += (x - prevX);
+                            animParams.CiclOffSetY += (y - prevY);
                         }
                     }
                 }
@@ -156,6 +153,19 @@ namespace Lab1
                         mouseClicked = false;
                     }
                     break;
+            }
+
+            if (animParams.TimerFake++ >= 5)
+            {
+                if (animParams.RectOffsetX > SCREEN_WIDTH - 100 || animParams.RectOffsetX < SCREEN_HEIGHT - 25)       //TODO: checked for motion
+                    animParams.RDelta *= -1;
+                if (animParams.CiclOffsetX > SCREEN_WIDTH - 100 || animParams.CiclOffsetX < SCREEN_HEIGHT - 25)
+                    animParams.CDelta *= -1;
+                animParams.RectOffsetX += animParams.RDelta;
+                animParams.CiclOffsetX += animParams.CDelta;
+                animParams.TimerFake = 0;
+                if (animParams.Fi++ > 360)
+                    animParams.Fi = 0;
             }
 
             if (draw)
@@ -214,8 +224,8 @@ namespace Lab1
             if (cicle.N > 2)
             {
                 BuildPolygon.Build_Rectangle(clippingWindow, widthScale, heightScale, 0, 0);
-                BuildPolygon.Build_RightPolygon(cicle, heightScale, ciclOffsetX, ciclOffSetY);
-                BuildPolygon.Build_Rectangle(rectangle, widthScale, heightScale, rectOffsetX, rectOffSetY);
+                BuildPolygon.Build_RightPolygon(cicle, heightScale, animParams.CiclOffsetX, animParams.CiclOffSetY);
+                BuildPolygon.Build_Rectangle(rectangle, widthScale, heightScale, animParams.RectOffsetX, animParams.RectOffSetY);
 
                 Draw_Polygon(clippingWindow.Points, 4);
                 SDL.SDL_Point[] testPointArray = FindIntersectionPoints();
