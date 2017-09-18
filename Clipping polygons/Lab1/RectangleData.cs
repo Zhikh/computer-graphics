@@ -8,7 +8,7 @@ namespace Lab1
         private int y0;
         private int width;
         private int height;
-        private SDL.SDL_Point[] points;
+        private SDL.SDL_Point[,] points;
 
         public RectangleData(int x0, int y0, int width, int height)
         {
@@ -70,7 +70,7 @@ namespace Lab1
             }
         }
 
-        public SDL.SDL_Point[] Points
+        public SDL.SDL_Point[,] Points
         {
             get
             {
@@ -79,7 +79,7 @@ namespace Lab1
 
             set
             {
-                points = new SDL.SDL_Point[4];
+                points = new SDL.SDL_Point[4, 2];
                 points = value;
             }
         }

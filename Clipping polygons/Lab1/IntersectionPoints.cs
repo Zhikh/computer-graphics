@@ -9,15 +9,15 @@ namespace Lab1
         private int B;
         private int C;
 
-        private SDL.SDL_Point p;
+        public SDL.SDL_Point p;
 
-        public SDL.SDL_Point crossingPoint
-        {
-            get
-            {
-                return p;
-            }
-        }
+        //public SDL.SDL_Point crossingPoint
+        //{
+        //    get
+        //    {
+        //        return p;
+        //    }
+        //}
 
         private int vector_mult(int ax, int ay, int bx, int by) //векторное произведение
         {
@@ -57,7 +57,6 @@ namespace Lab1
         {
             if (areCrossing(p1, p2, p3, p4))
             {
-                SDL.SDL_Point p;
                 int a1, b1, c1, a2, b2, c2;
 
                 LineEquation(p1, p2);

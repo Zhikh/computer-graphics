@@ -43,8 +43,8 @@ namespace Lab1
             int clippingWindowHeight = SCREEN_HEIGHT - 25;
 
             clippingWindow = new RectangleData(50, 50, clippingWindowWidth, clippingWindowHeight);
-            cicle = new RightPolygonData(clippingWindow.X0 + 100, clippingWindow.Y0 + 100, 100, 100, 0.4);
-            rectangle = new RectangleData(clippingWindow.X0 + 400, clippingWindow.Y0 + 100, 200, 100);
+            cicle = new RightPolygonData(100, clippingWindow.X0 + 100, clippingWindow.Y0 + 100, 50, 0.4);
+            rectangle = new RectangleData(clippingWindow.X0 + 400, clippingWindow.Y0 + 100, 300, 50);
 
             OnLoop();
 
@@ -183,34 +183,45 @@ namespace Lab1
                 BuildPolygon.Build_RightPolygon(cicle, heightScale);
                 BuildPolygon.Build_Rectangle(rectangle, widthScale, heightScale);
 
-                SDL.SDL_Point point;
-
-                int i = 0;
-                while (i < 4)
-                {
-                    int j = 0;
-                    while (j < cicle.N)
-                    {
-                        //point = Intersection(clippingWindow.Points[i], clippingWindow.Points[i + 1], cicle.Points[j], cicle.Points[j + 1]);
-                        j += 2;
-                    }
-                    i += 2;
-                }
+                SDL.SDL_Point[] testPointArray = FindIntersectionPoints();
 
                 Draw_Polygon(clippingWindow.Points, 4);
-                Draw_Polygon(cicle.Points, cicle.N);
+               // Draw_Polygon(cicle.Points, cicle.N);
                 Draw_Polygon(rectangle.Points, 4);
                 
             }
             SDL.SDL_RenderPresent(renderer);
         }
 
-        void Draw_Polygon(SDL.SDL_Point[] points, int n)
+        void Draw_Polygon(SDL.SDL_Point[,] points, int n)
         {
             int i;
-            for (i = 1; i < n; i++)
-                SDL.SDL_RenderDrawLine(renderer, points[i - 1].x, points[i - 1].y, points[i].x, points[i].y);
-            SDL.SDL_RenderDrawLine(renderer, points[n - 1].x, points[n - 1].y, points[0].x, points[0].y);
+            for (i = 0; i < n; i++)
+                SDL.SDL_RenderDrawLine(renderer, points[i, 0].x, points[i, 0].y, points[i, 1].x, points[i, 1].y);
+            //SDL.SDL_RenderDrawLine(renderer, points[n - 1].x, points[n - 1].y, points[0].x, points[0].y);
+        }
+
+        SDL.SDL_Point[] FindIntersectionPoints()
+        {
+            int length = 0;
+            SDL.SDL_Point[] points = new SDL.SDL_Point[length];
+            IntersectionPoints pointSercher = new IntersectionPoints();
+
+            int k = 0;
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 4; j++)
+                {
+                    if (pointSercher.IsPointExist(clippingWindow.Points[i, 0], clippingWindow.Points[i, 1], rectangle.Points[j, 0], rectangle.Points[j, 1]))
+                    {
+                        length++;
+                        Array.Resize(ref points, length);
+                        points[k] = pointSercher.p;
+                        k++;
+                    }
+                }
+            }
+            return points;
         }
     }
 }

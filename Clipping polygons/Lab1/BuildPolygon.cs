@@ -20,24 +20,36 @@ namespace Lab1
 
         public static void Build_Rectangle(RectangleData rectangle, double widthScale, double heightScale)
         {
-            var points = new SDL.SDL_Point[4];
+            var points = new SDL.SDL_Point[4,2];
 
-            points[0].x = rectangle.X0;
-            points[0].y = rectangle.Y0;
+            //[p0p1]
+            points[0, 0].x = rectangle.X0;
+            points[0, 0].y = rectangle.Y0;
+            points[0, 1].x = points[0, 0].x + rectangle.Width;
+            points[0, 1].y = points[0, 0].y;
 
-            points[1].x = points[0].x + rectangle.Width;
-            points[1].y = points[0].y;
+            //[p1p2]
+            points[1, 0] = points[0, 1];
+            points[1, 1].x = points[1, 0].x;
+            points[1, 1].y = Math.Abs(points[1, 0].y - rectangle.Height);
 
-            points[2].x = points[1].x;
-            points[2].y = Math.Abs(points[1].y - rectangle.Height);
+            //[p3p2]
+            points[2, 0].x =Math.Abs(points[1, 1].x - rectangle.Width);
+            points[2, 0].y = points[1, 1].y;
+            points[2, 1] = points[1, 1];
 
-            points[3].x =Math.Abs(points[2].x - rectangle.Width);
-            points[3].y = points[2].y;
+            //[p0p3]
+            points[3, 0] = points[0, 0];
+            points[3, 1] = points[2, 0];
 
             for (int i = 0; i < 4; i++)
             {
-                points[i].x = (int)Math.Floor(points[i].x * widthScale);
-                points[i].y = (int)Math.Floor(points[i].y * heightScale);
+                for (int j = 0; j < 2; j++)
+                {
+                    points[i, j].x = (int)Math.Floor(points[i, j].x * widthScale);
+                    points[i, j].y = (int)Math.Floor(points[i, j].y * heightScale);
+                }
+
             }
 
             rectangle.Points = points;
