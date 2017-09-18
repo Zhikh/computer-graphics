@@ -72,5 +72,48 @@ namespace Lab1
 
             rectangle.Points = points;
         }
+
+        public static bool isPointInsidePolygon(SDL.SDL_Point[] p, int arrLen, int x, int y)
+        {
+            int i1, i2, n, N, S, S1, S2, S3;
+            bool flag = false;
+            N = arrLen;
+            for (n = 0; n < N; n++)
+            {
+                flag = false;
+                i1 = n < N - 1 ? n + 1 : 0;
+                while (!flag)
+                {
+                    i2 = i1 + 1;
+                    if (i2 >= N)
+                        i2 = 0;
+                    if (i2 == (n < N - 1 ? n + 1 : 0))
+                        break;
+                    S = Math.Abs(p[i1].x * (p[i2].y - p[n].y) +
+                        p[i2].x * (p[n].y - p[i1].y) +
+                        p[n].x * (p[i1].y - p[i2].y));
+                    S1 = Math.Abs(p[i1].x * (p[i2].y - y) +
+                        p[i2].x * (y - p[i1].y) +
+                        x * (p[i1].y - p[i2].y));
+                    S2 = Math.Abs(p[n].x * (p[i2].y - y) +
+                        p[i2].x * (y - p[n].y) +
+                        x * (p[n].y - p[i2].y));
+                    S3 = Math.Abs(p[i1].x * (p[n].y - y) +
+                        p[n].x * (y - p[i1].y) +
+                        x * (p[i1].y - p[n].y));
+                    if (S == S1 + S2 + S3)
+                    {
+                        flag = true;
+                        break;
+                    }
+                    i1 = i1 + 1;
+                    if (i1 >= N)
+                        i1 = 0;
+                }
+                if (!flag)
+                    break;
+            }
+            return flag;
+        }
     }
 }
