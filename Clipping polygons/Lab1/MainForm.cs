@@ -21,7 +21,7 @@ namespace Lab1
 
         private bool mouseClicked;
         private int prevX, prevY;
-        private int fi;
+        private double fi;
 
         public MainForm()
         {
@@ -52,7 +52,7 @@ namespace Lab1
 
             clippingWindow = new RectangleData(50, 50, clippingWindowWidth, clippingWindowHeight);
             cicle = new RightPolygonData(100, clippingWindow.X0 + 100, clippingWindow.Y0 + 100, 50, 0.4);
-            rectangle = new RectangleData(clippingWindow.X0 + 400, clippingWindow.Y0 + 100, 300, 50);
+            rectangle = new RectangleData(clippingWindow.X0 + 400, clippingWindow.Y0 + 100, 200, 70);
             animParams = new AnimationData();
 
             OnLoop();
@@ -209,17 +209,21 @@ namespace Lab1
             double widthScale = (double)width / SCREEN_WIDTH;
             double heightScale = (double)height / SCREEN_HEIGHT;
 
-            if (cicle.N > 2)
+            if (cicle.N > 5)
             {
                 if (animParams.TimerFake++ >= 5)
                 {
-                    if (animParams.RectOffsetX > SCREEN_WIDTH - 100 || animParams.RectOffsetX < SCREEN_HEIGHT - 25)       //TODO: checked for motion
+                    if (animParams.RectOffsetX > 0 || animParams.RectOffsetX < -350 * widthScale)    //+-
                         animParams.RDelta *= -1;
-                    if (animParams.CiclOffsetX > SCREEN_WIDTH - 100 || animParams.CiclOffsetX < SCREEN_HEIGHT - 25)
+
+                    if (animParams.CiclOffsetX > 350 * widthScale || animParams.CiclOffsetX < -80 * widthScale)     //+-
                         animParams.CDelta *= -1;
+
                     animParams.RectOffsetX += animParams.RDelta;
                     animParams.CiclOffsetX += animParams.CDelta;
+
                     animParams.TimerFake = 0;
+
                     if (fi++ > 360)
                         fi = 0;
                 }

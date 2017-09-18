@@ -18,18 +18,12 @@ namespace Lab1
             ciclOffSetY = 0;
             rectOffsetX = 0;
             rectOffSetY = 0;
-            rDelta = 0;
-            cDelta = 0;
+            rDelta = -2;
+            cDelta = 2;
             timerFake = 0;
             fi = 0;
 
-            affine_transformation = new double[3, 3];
-
-            affine_transformation[0, 2] = 0;
-            affine_transformation[1, 2] = 0;
-            affine_transformation[2, 2] = 0;
-            affine_transformation[2, 2] = 0;
-            affine_transformation[2, 2] = 1;
+            affine_transformation = new double[2, 2];
         }
 
         public double Fi
@@ -42,7 +36,6 @@ namespace Lab1
             set
             {
                 fi = value;
-                fi *= Math.PI / 180;
 
                 affine_transformation[0, 0] = Math.Cos(fi);
                 affine_transformation[0, 1] = Math.Sin(fi);
