@@ -18,6 +18,11 @@ namespace Lab1
         private RectangleData rectangle;
         private RectangleData clippingWindow;
 
+        private bool mouseClicked;
+        private int prevX, prevY;
+        private int rectOffsetX, rectOffSetY,
+            ciclOffsetX, ciclOffSetY;
+
         public MainForm()
         {
             InitializeComponent();
@@ -41,6 +46,12 @@ namespace Lab1
 
             int clippingWindowWidth = SCREEN_WIDTH - 100;
             int clippingWindowHeight = SCREEN_HEIGHT - 25;
+
+            mouseClicked = false;
+            ciclOffsetX = 0;
+            ciclOffSetY = 0;
+            rectOffsetX = 0;
+            rectOffSetY = 0;
 
             clippingWindow = new RectangleData(50, 50, clippingWindowWidth, clippingWindowHeight);
             cicle = new RightPolygonData(100, clippingWindow.X0 + 100, clippingWindow.Y0 + 100, 50, 0.4);
@@ -114,14 +125,37 @@ namespace Lab1
                     if (sdlEvent.button.button == SDL.SDL_BUTTON_LEFT)
                     {
                         draw = !draw;   // toggle value
-                    }
-                    else
-                    if (sdlEvent.button.button == SDL.SDL_BUTTON_RIGHT)
-                    {
-                        // do smth
+                        mouseClicked = true;
+                        prevX = sdlEvent.button.x;
+                        prevY = sdlEvent.button.y;
                     }
                 }
                 break;
+                case SDL.SDL_EventType.SDL_MOUSEMOTION:
+                {
+                    if (mouseClicked)
+                    {
+                        int x = sdlEvent.button.x;
+                        int y = sdlEvent.button.y;
+
+                        if (isPointInsidePolygon(rectangle.Points, rectangle.Points.Length, x, y))
+                        {
+                            rectOffsetX += (x - prevX);
+                            rectOffSetY += (y - prevY);
+                        }
+                        if (isPointInsidePolygon(cicle.Points, cicle.Points.Length, x, y))
+                        {
+                            ciclOffsetX += (x - prevX);
+                            ciclOffSetY += (y - prevY);
+                        }
+                    }
+                }
+                break;
+                case SDL.SDL_EventType.SDL_MOUSEBUTTONUP:
+                    {
+                        mouseClicked = false;
+                    }
+                    break;
             }
 
             if (draw)
@@ -131,6 +165,49 @@ namespace Lab1
             }
 
             return false;
+        }
+
+        bool isPointInsidePolygon(SDL.SDL_Point[] p, int arrLen, int x, int y)
+        {
+            int i1, i2, n, N, S, S1, S2, S3;
+            bool flag = false;
+            N = arrLen;
+            for (n = 0; n < N; n++)
+            {
+                flag = false;
+                i1 = n < N - 1 ? n + 1 : 0;
+                while (!flag)
+                {
+                    i2 = i1 + 1;
+                    if (i2 >= N)
+                        i2 = 0;
+                    if (i2 == (n < N - 1 ? n + 1 : 0))
+                        break;
+                    S = Math.Abs(p[i1].x * (p[i2].y - p[n].y) +
+                        p[i2].x * (p[n].y - p[i1].y) +
+                        p[n].x * (p[i1].y - p[i2].y));
+                    S1 = Math.Abs(p[i1].x * (p[i2].y - y) +
+                        p[i2].x * (y - p[i1].y) +
+                        x * (p[i1].y - p[i2].y));
+                    S2 = Math.Abs(p[n].x * (p[i2].y - y) +
+                        p[i2].x * (y - p[n].y) +
+                        x * (p[n].y - p[i2].y));
+                    S3 = Math.Abs(p[i1].x * (p[n].y - y) +
+                        p[n].x * (y - p[i1].y) +
+                        x * (p[i1].y - p[n].y));
+                    if (S == S1 + S2 + S3)
+                    {
+                        flag = true;
+                        break;
+                    }
+                    i1 = i1 + 1;
+                    if (i1 >= N)
+                        i1 = 0;
+                }
+                if (!flag)
+                    break;
+            }
+            return flag;
         }
 
         [DllImport("kernel32.dll", SetLastError = true)]
@@ -179,26 +256,28 @@ namespace Lab1
 
             if (cicle.N > 2)
             {
-                BuildPolygon.Build_Rectangle(clippingWindow, widthScale, heightScale);
-                BuildPolygon.Build_RightPolygon(cicle, heightScale);
-                BuildPolygon.Build_Rectangle(rectangle, widthScale, heightScale);
-
-                SDL.SDL_Point[] testPointArray = FindIntersectionPoints();
+                BuildPolygon.Build_Rectangle(clippingWindow, widthScale, heightScale, 0, 0);
+                BuildPolygon.Build_RightPolygon(cicle, heightScale, ciclOffsetX, ciclOffSetY);
+                BuildPolygon.Build_Rectangle(rectangle, widthScale, heightScale, rectOffsetX, rectOffSetY);
 
                 Draw_Polygon(clippingWindow.Points, 4);
-               // Draw_Polygon(cicle.Points, cicle.N);
+                SDL.SDL_Point[] testPointArray = FindIntersectionPoints();
                 Draw_Polygon(rectangle.Points, 4);
+                //SDL.SDL_RenderDrawPoints(renderer, cicle.Points, points.Length);
+                Draw_Polygon(cicle.Points, cicle.N);
+
                 
             }
             SDL.SDL_RenderPresent(renderer);
         }
 
-        void Draw_Polygon(SDL.SDL_Point[,] points, int n)
+        void Draw_Polygon(SDL.SDL_Point[] points, int n)
         {
             int i;
-            for (i = 0; i < n; i++)
-                SDL.SDL_RenderDrawLine(renderer, points[i, 0].x, points[i, 0].y, points[i, 1].x, points[i, 1].y);
-            //SDL.SDL_RenderDrawLine(renderer, points[n - 1].x, points[n - 1].y, points[0].x, points[0].y);
+            for (i = 1; i < n; i++)
+                SDL.SDL_RenderDrawLine(renderer, points[i-1].x, points[i-1].y, points[i].x, points[i].y);
+            SDL.SDL_RenderDrawLine(renderer, points[n - 1].x, points[n - 1].y, points[0].x, points[0].y);
+            
         }
 
         SDL.SDL_Point[] FindIntersectionPoints()
@@ -208,11 +287,11 @@ namespace Lab1
             IntersectionPoints pointSercher = new IntersectionPoints();
 
             int k = 0;
-            for (int i = 0; i < 4; i++)
+            for (int i = 1; i < 4; i++)
             {
-                for (int j = 0; j < 4; j++)
+                for (int j = 1; j < 4; j++)
                 {
-                    if (pointSercher.IsSegmentsIntersect(clippingWindow.Points[i, 0], clippingWindow.Points[i, 1], rectangle.Points[j, 0], rectangle.Points[j, 1]))
+                    if (pointSercher.IsSegmentsIntersect(clippingWindow.Points[i-1], clippingWindow.Points[i], rectangle.Points[j], rectangle.Points[j-1]))
                     {
                         length++;
                         Array.Resize(ref points, length);
