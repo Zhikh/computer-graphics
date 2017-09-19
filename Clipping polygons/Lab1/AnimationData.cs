@@ -5,12 +5,19 @@ namespace Lab1
     class AnimationData
     {
         private double[,] affine_transformation;
+
         private int rectOffsetX, rectOffSetY,
             ciclOffsetX, ciclOffSetY;
+
         private int rDelta;
         private int cDelta;
+
         private int timerFake;
+
         private double fi;
+
+        private bool[] rectInsideClipWindow;
+        private bool[] ciclInsideClipWindow;
 
         public AnimationData()
         {
@@ -145,6 +152,32 @@ namespace Lab1
             set
             {
                 affine_transformation = value;
+            }
+        }
+
+        public bool[] RectInsideClipWindow
+        {
+            get
+            {
+                return rectInsideClipWindow;
+            }
+
+            set
+            {
+                rectInsideClipWindow = value;
+            }
+        }
+
+        public bool[] CiclInsideClipWindow
+        {
+            get
+            {
+                return ciclInsideClipWindow;
+            }
+
+            set
+            {
+                ciclInsideClipWindow = value;
             }
         }
     }

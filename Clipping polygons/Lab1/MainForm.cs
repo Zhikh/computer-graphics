@@ -232,42 +232,110 @@ namespace Lab1
                 BuildPolygon.Build_RightPolygon(cicle, heightScale, animParams);
                 BuildPolygon.Build_Rectangle(rectangle, widthScale, heightScale, animParams);
 
-                Draw_Polygon(clippingWindow.Points, 4);
-                SDL.SDL_Point[] testPointArray = FindIntersectionPoints();
-                Draw_Polygon(rectangle.Points, 4);
-                Draw_Polygon(cicle.Points, cicle.N);
+                Draw_ClippingWindow(clippingWindow.Points);
+                SDL.SDL_Point[] testPointArray = FindIntersectionPoints(clippingWindow.Points, rectangle.Points, true);
+                Draw_Polygon(testPointArray, animParams.RectInsideClipWindow);
+                testPointArray = FindIntersectionPoints(clippingWindow.Points, cicle.Points, false);
+                Draw_Polygon(testPointArray, animParams.CiclInsideClipWindow);
             }
             SDL.SDL_RenderPresent(renderer);
         }
 
-        void Draw_Polygon(SDL.SDL_Point[] points, int n)
+        void Draw_ClippingWindow(SDL.SDL_Point[] points)
         {
             int i;
-            for (i = 1; i < n; i++)
-                SDL.SDL_RenderDrawLine(renderer, points[i-1].x, points[i-1].y, points[i].x, points[i].y);
-            SDL.SDL_RenderDrawLine(renderer, points[n - 1].x, points[n - 1].y, points[0].x, points[0].y);
-            
+            for (i = 1; i < points.Length; i++)
+            {
+                SDL.SDL_RenderDrawLine(renderer, points[i - 1].x, points[i - 1].y, points[i].x, points[i].y);
+            }
+            SDL.SDL_RenderDrawLine(renderer, points[points.Length - 1].x, points[points.Length - 1].y, points[0].x, points[0].y);
         }
 
-        SDL.SDL_Point[] FindIntersectionPoints()
+        void Draw_Polygon(SDL.SDL_Point[] points, bool[] isInside)
         {
-            int length = 0;
+            int i;
+            for (i = 1; i < points.Length; i++)
+            {
+                if(isInside[i - 1] || isInside[i])
+                    SDL.SDL_RenderDrawLine(renderer, points[i - 1].x, points[i - 1].y, points[i].x, points[i].y);
+            }
+            if (isInside[points.Length - 1] || isInside[0])
+                SDL.SDL_RenderDrawLine(renderer, points[points.Length - 1].x, points[points.Length - 1].y, points[0].x, points[0].y); 
+        }
+
+        SDL.SDL_Point[] FindIntersectionPoints(SDL.SDL_Point[] clippingPoints, SDL.SDL_Point[] polygonPoints, bool isRectangle)
+        {
+            int length = polygonPoints.Length;
             SDL.SDL_Point[] points = new SDL.SDL_Point[length];
+            bool[] isInside = new bool[length];
+            bool isOutside = false;
             IntersectionPoints pointSercher = new IntersectionPoints();
 
             int k = 0;
-            for (int i = 1; i < 4; i++)
+            for (int j = 1; j < polygonPoints.Length; j++)
             {
-                for (int j = 1; j < 4; j++)
+                points[k] = polygonPoints[j - 1];
+                isInside[k] = BuildPolygon.isPointInsidePolygon(clippingPoints, rectangle.Points.Length, points[k].x, points[k].y);
+                k++;
+                for (int i = 1; i < 4; i++)
                 {
-                    if (pointSercher.IsSegmentsIntersect(clippingWindow.Points[i-1], clippingWindow.Points[i], rectangle.Points[j], rectangle.Points[j-1]))
+                    if (pointSercher.IsSegmentsIntersect(clippingPoints[i-1], clippingPoints[i], polygonPoints[j], polygonPoints[j-1]))
                     {
+                        isOutside = !(isOutside);
                         length++;
                         Array.Resize(ref points, length);
+                        Array.Resize(ref isInside, length);
                         points[k] = pointSercher.crossingPoint;
+                        isInside[k] = false;
                         k++;
                     }
                 }
+
+                if (pointSercher.IsSegmentsIntersect(clippingPoints[3], clippingPoints[0], polygonPoints[j], polygonPoints[j - 1]))
+                {
+                    isOutside = !(isOutside);
+                    length++;
+                    Array.Resize(ref points, length);
+                    Array.Resize(ref isInside, length);
+                    points[k] = pointSercher.crossingPoint;
+                    isInside[k] = false;
+                    k++;
+                }
+            }
+
+            points[k] = polygonPoints[polygonPoints.Length - 1];
+            isInside[k] = BuildPolygon.isPointInsidePolygon(clippingPoints, rectangle.Points.Length, points[k].x, points[k].y);
+            k++;
+            for (int i = 1; i < 4; i++)
+            {
+                if (pointSercher.IsSegmentsIntersect(clippingPoints[i - 1], clippingPoints[i], polygonPoints[polygonPoints.Length - 1], polygonPoints[0]))
+                {
+                    length++;
+                    Array.Resize(ref points, length);
+                    Array.Resize(ref isInside, length);
+                    points[k] = pointSercher.crossingPoint;
+                    isInside[k] = false;
+                    k++;
+                }
+            }
+
+            if (pointSercher.IsSegmentsIntersect(clippingPoints[3], clippingPoints[0], polygonPoints[polygonPoints.Length - 1], polygonPoints[0]))
+            {
+                length++;
+                Array.Resize(ref points, length);
+                Array.Resize(ref isInside, length);
+                points[k] = pointSercher.crossingPoint;
+                isInside[k] = false;
+                k++;
+            }
+            
+            if (isRectangle)
+            {
+                animParams.RectInsideClipWindow = isInside;
+            }
+            else
+            {
+                animParams.CiclInsideClipWindow = isInside;
             }
             return points;
         }
