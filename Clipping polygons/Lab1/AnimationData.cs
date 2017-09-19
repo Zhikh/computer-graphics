@@ -14,7 +14,7 @@ namespace Lab1
 
         private int timerFake;
 
-        private double fi;
+        public double fi;
 
         private bool[] rectInsideClipWindow;
         private bool[] ciclInsideClipWindow;
@@ -33,22 +33,13 @@ namespace Lab1
             affine_transformation = new double[2, 2];
         }
 
-        public double Fi
+        public void SetFi(double value)
         {
-            get
-            {
-                return fi;
-            }
-
-            set
-            {
-                fi = value;
-
-                affine_transformation[0, 0] = Math.Cos(fi);
-                affine_transformation[0, 1] = Math.Sin(fi);
-                affine_transformation[1, 0] = -Math.Sin(fi);
-                affine_transformation[1, 1] = Math.Cos(fi);
-            }
+            fi = value;
+            affine_transformation[0, 0] = Math.Cos(fi);
+            affine_transformation[0, 1] = Math.Sin(fi);
+            affine_transformation[1, 0] = -Math.Sin(fi);
+            affine_transformation[1, 1] = Math.Cos(fi);
         }
 
         public int RectOffsetX

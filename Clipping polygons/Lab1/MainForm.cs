@@ -52,7 +52,7 @@ namespace Lab1
 
             clippingWindow = new RectangleData(50, 50, clippingWindowWidth, clippingWindowHeight);
             cicle = new RightPolygonData(100, clippingWindow.X0 + 100, clippingWindow.Y0 + 100, 50, 0.4);
-            rectangle = new RectangleData(clippingWindow.X0 + 400, clippingWindow.Y0 + 100, 200, 70);
+            rectangle = new RectangleData(clippingWindow.X0 + 400, clippingWindow.Y0 + 200, 200, 70);
             animParams = new AnimationData();
 
             OnLoop();
@@ -224,13 +224,16 @@ namespace Lab1
 
                     animParams.TimerFake = 0;
 
-                    if (fi++ > 360)
+                    fi ++;
+                    if (fi > 360)
                         fi = 0;
                 }
-                animParams.Fi = fi * Math.PI / 180;
+                animParams.SetFi( fi * Math.PI / 180);
                 BuildPolygon.Build_Rectangle(clippingWindow, widthScale, heightScale);
                 BuildPolygon.Build_RightPolygon(cicle, heightScale, animParams);
                 BuildPolygon.Build_Rectangle(rectangle, widthScale, heightScale, animParams);
+                //rectangle.OldPoints = rectangle.Points;
+                //rectangle.Points = BuildPolygon.FindNewRotetedPoints(rectangle.Points, fi * Math.PI / 180);
 
                 Draw_ClippingWindow(clippingWindow.Points);
                 SDL.SDL_Point[] testPointArray = FindIntersectionPoints(clippingWindow.Points, rectangle.Points, true);

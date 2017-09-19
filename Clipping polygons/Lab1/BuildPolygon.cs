@@ -47,35 +47,43 @@ namespace Lab1
         {
             var tempPoints = new SDL.SDL_Point[4];
 
-            tempPoints = new SDL.SDL_Point[4];
-            tempPoints[0].x = rectangle.X0;
-            tempPoints[0].y = rectangle.Y0;
-
-            tempPoints[1].x = tempPoints[0].x + rectangle.Width;
-            tempPoints[1].y = tempPoints[0].y;
-
-            tempPoints[2].x = tempPoints[1].x;
-            tempPoints[2].y = Math.Abs(tempPoints[1].y - rectangle.Height);
-
-            tempPoints[3].x = Math.Abs(tempPoints[2].x - rectangle.Width);
-            tempPoints[3].y = tempPoints[2].y;
+            int x0 = rectangle.OldPoints[0].x + rectangle.Width/2 ;
+            int y0;
+            if (rectangle.OldPoints[0].y > rectangle.OldPoints[3].y)
+            {
+                y0 = rectangle.OldPoints[0].y - rectangle.Height / 2;
+            }
+            else
+            {
+                y0 = rectangle.OldPoints[0].y + rectangle.Height / 2;
+            }
 
             for (int i = 0; i < 4; i++)
             {
-                tempPoints[i].x = (int)Math.Floor((tempPoints[i].x + param.RectOffsetX) * widthScale);
-                tempPoints[i].y = (int)Math.Floor((tempPoints[i].y + param.RectOffSetY) * heightScale);
+                tempPoints[i].x = (int)Math.Floor((x0 + (rectangle.OldPoints[i].x - x0) * Math.Cos(param.fi) -
+                    (rectangle.OldPoints[i].y - y0) * Math.Sin( param.fi)  - 20 + param.RectOffsetX) /** widthScale*/);
+                tempPoints[i].y = (int)Math.Floor((y0 + (rectangle.OldPoints[i].x - x0) * Math.Sin(param.fi)+
+                     (rectangle.OldPoints[i].y - y0) * Math.Cos(param.fi) + param.RectOffSetY) -20 /** heightScale*/);
             }
-
-
-            //for (int i = 0; i < 4; i++)
-            //{
-            //    tempPoints[i].x = (int)Math.Floor((rectangle.OldPoints[i].x * param.Affine_transformation[0, 0] +
-            //        rectangle.OldPoints[i].y * param.Affine_transformation[0,1] +  param.RectOffsetX ) * widthScale);
-            //    tempPoints[i].y = (int)Math.Floor((rectangle.OldPoints[i].x * param.Affine_transformation[0, 1] +
-            //         rectangle.OldPoints[i].y * param.Affine_transformation[1, 1] + param.RectOffSetY ) * heightScale);
-            //}
-            // rectangle.OldPoints = tempPoints;
             rectangle.Points = tempPoints;
+        }
+
+        public static SDL.SDL_Point Rotate(SDL.SDL_Point point, double angle)
+        {
+            SDL.SDL_Point rotated_point;
+            rotated_point.x = (int)(point.x * Math.Cos(angle) - point.y * Math.Sin(angle));
+            rotated_point.y = (int)(point.x * Math.Sin(angle) + point.y * Math.Cos(angle));
+            return rotated_point;
+        }
+
+        public static SDL.SDL_Point[] FindNewRotetedPoints(SDL.SDL_Point[] points, double angle)
+        {
+            SDL.SDL_Point[] newPoints = new SDL.SDL_Point[points.Length];
+            for (int i = 0; i < points.Length; i++)
+            {
+                newPoints[i] = Rotate(points[i], angle);
+            }
+            return newPoints;
         }
 
         public static bool isPointInsidePolygon(SDL.SDL_Point[] p, int arrLen, int x, int y)
